@@ -15,39 +15,39 @@ class TodoItemViews(APIView):
         serializer = TodoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+            return Response( serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response({"data": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, id=None):
         if id:
             task = Todo.objects.get(id=id)
             serializer = TodoSerializer(task)
-            return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+            return Response( serializer.data, status=status.HTTP_200_OK)
 
         else:
             tasks=Todo.objects.all()
             serializer=TodoSerializer(tasks,many=True)
-            return Response({"data":serializer.data},status=status.HTTP_200_OK)
+            return Response(serializer.data,status=status.HTTP_200_OK)
 
     def patch(self,request,id=None):
         task=Todo.objects.get(id=id)
         serializer=TodoSerializer(task,data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({"data":serializer.data})
+            return Response(serializer.data)
         else:
-            return Response({"data":serializer.errors})
+            return Response(serializer.errors)
     
     def delete(self,request,id=None):
         if id:
             task=get_object_or_404(Todo,id=id)
             task.delete()
-            return Response({"data":"Task Deleted"})
+            return Response("Task Deleted")
         else:
             tasks=Todo.objects.all()
             tasks.delete()
-            return Response({"data":"All Tasks Deleted"})
+            return Response("All Tasks Deleted")
 
 class TaskSearch(ListAPIView):
     queryset = Todo.objects.all()
